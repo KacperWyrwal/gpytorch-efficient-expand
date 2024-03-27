@@ -371,21 +371,25 @@ class LazyEvaluatedKernelTensor(LinearOperator):
 
         return to_linear_operator(res)
 
+
+    # NOTE (Kacper) repeat/expand before calculation is super inefficient. By passing to the super's repeat we avoid 
+    # expansion of the operands and only expand the result. 
     @recall_grad_state
     def repeat(self, *repeats):
-        if len(repeats) == 1 and hasattr(repeats[0], "__iter__"):
-            repeats = repeats[0]
-        *batch_repeat, row_repeat, col_repeat = repeats
+        return super().repeat(*repeats)
+        # if len(repeats) == 1 and hasattr(repeats[0], "__iter__"):
+        #     repeats = repeats[0]
+        # *batch_repeat, row_repeat, col_repeat = repeats
 
-        x1 = self.x1.repeat(*batch_repeat, row_repeat, 1)
-        x2 = self.x2.repeat(*batch_repeat, col_repeat, 1)
-        return self.__class__(
-            x1,
-            x2,
-            kernel=self.kernel,
-            last_dim_is_batch=self.last_dim_is_batch,
-            **self.params,
-        )
+        # x1 = self.x1.repeat(*batch_repeat, row_repeat, 1)
+        # x2 = self.x2.repeat(*batch_repeat, col_repeat, 1)
+        # return self.__class__(
+        #     x1,
+        #     x2,
+        #     kernel=self.kernel,
+        #     last_dim_is_batch=self.last_dim_is_batch,
+        #     **self.params,
+        # )
 
     def representation(self):
         # If we're checkpointing the kernel, we'll use chunked _matmuls defined in LazyEvaluatedKernelTensor
