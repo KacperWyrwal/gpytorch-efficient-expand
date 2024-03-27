@@ -42,7 +42,8 @@ install_requires = [
     "mpmath>=0.19,<=1.3",  # avoid incompatibiltiy with torch+sympy with mpmath 1.4
     "scikit-learn",
     "scipy",
-    "linear_operator>=0.5.2",
+    "linear-operator @ git+https://github.com/KacperWyrwal/linear_operator-efficient-expand.git@main",
+    # "linear_operator>=0.5.2",
 ]
 # if recent dev version of PyTorch is installed, no need to install stable
 try:
